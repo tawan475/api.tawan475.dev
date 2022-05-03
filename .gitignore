@@ -1,3 +1,7 @@
+# Ignore
+ssl/
+.vscode/
+
 # Logs
 logs
 *.log
