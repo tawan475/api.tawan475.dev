@@ -7,9 +7,7 @@ const app = express();
 app.dirname = __dirname;
 require('./libs/middlewares')(app);
 
-app.use((req, res, next) => {
-    next();
-});
+app.use(require('./router'));
 
 app.use(function (req, res, next) {
     next(createError(404));
