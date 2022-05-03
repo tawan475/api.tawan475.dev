@@ -7,7 +7,8 @@ const app = express();
 app.dirname = __dirname;
 require('./libs/middlewares')(app);
 
-app.use(require('./router'));
+let apiRouter = require('./router')(app);
+app.use(apiRouter);
 
 app.use(function (req, res, next) {
     next(createError(404));
