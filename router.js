@@ -21,7 +21,7 @@ module.exports = (app) => {
 
         let dir = fs.readdirSync(absoluteTarget, { withFileTypes: true });
         dir.forEach(obj => {
-            let apiRouteName = path.join(path.relative(APIFolder, relative), obj.name).replace(/\\|\//g, '/').replace(/.js$/, '');
+            let apiRouteName = '/' + path.join(path.relative(APIFolder, relative), obj.name).replace(/\\|\//g, '/').replace(/.js$/, '');
             let objPath = path.join(absoluteTarget, obj.name);
             if (obj.isDirectory()) loadRoutes(dirname, objPath);
             if (obj.isFile() && obj.name.endsWith(".js")) {
