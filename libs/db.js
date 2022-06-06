@@ -1,11 +1,27 @@
-const sqlite3 = require('sqlite3');
+const mysql = require('mysql');
 
-module.exports = (app, dbpath) => {
-    app.db = new sqlite3.Database(dbpath, (err) => {
-        if (err) {
-            console.error(err.message);
-            process.exit(1);
+module.exports = (app) => {
+    return new Promise((resolve, reject) => {
+        const con = {
+            host: process.env.db_host,
+            port: process.env.db_port,
+            user: process.env.db_user,
+            insecureAuth: process.env.NODE_ENV !== "production",
+            password: process.env.db_password,
+            database: process.env.db_database
         }
-        console.log(`[${Date.now()}] Connected to the database.`);
+        let connection = mysql.createConnection(con);
+
+        connection.connect(function (err) {
+            if (err) {
+                console.error('error connecting: ' + err.stack);
+                throw new Error(err);
+                return;
+            }
+
+            console.log('Connected to db as id ' + connection.threadId);
+            resolve(connection);
+        });
+
     });
 }
