@@ -6,7 +6,7 @@ const path = require('path');
 
 const app = express();
 app.dirname = __dirname;
-require('./libs/db')(app, path.join(app.dirname, '../', 'database.db'));
+require('./libs/db')(app);
 require('./libs/middlewares')(app);
 
 let apiRouter = require('./router')(app);
