@@ -6,10 +6,10 @@ module.exports = (app) => {
             host: process.env.db_host,
             port: process.env.db_port,
             user: process.env.db_user,
-            insecureAuth: process.env.NODE_ENV !== "production",
             password: process.env.db_password,
             database: process.env.db_database
-        }
+        };
+
         let connection = mysql.createConnection(con);
 
         connection.connect(function (err) {
