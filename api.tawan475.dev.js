@@ -41,11 +41,11 @@ function errorHandler(err, req, res, next) {
 app.use(errorHandler);
 
 const options = process.env.NODE_ENV === "production" ? {
-    key: fs.readFileSync('/etc/letsencrypt/live/tawan475.dev-0001/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/tawan475.dev-0001/fullchain.pem'),
+    key: fs.readFileSync('/etc/letsencrypt/live/tawan475.dev/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/tawan475.dev/fullchain.pem'),
 } : {
-    key: fs.readFileSync('./libs/ssl/localhost/localhost.key'),
-    cert: fs.readFileSync('./libs/ssl/localhost/localhost.crt')
+    key: fs.readFileSync('../ssl/localhost.key'),
+    cert: fs.readFileSync('../ssl/localhost.crt')
 }
 
 // disabled for http, port = 8001
