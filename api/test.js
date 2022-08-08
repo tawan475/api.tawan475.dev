@@ -1,2 +1,2 @@
-module.exports = (app, router, path) => {
+module.exports = (app, router, routeName) => {
 }

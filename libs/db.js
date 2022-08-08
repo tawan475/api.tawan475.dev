@@ -18,7 +18,18 @@ module.exports = (app) => {
                 throw new Error(err);
                 return;
             }
+            connection.generateUID = async () => {
+                let pattern = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz-_"
+                let UID = 'UID'
+                while ((await app.db.query(`SELECT * FROM 'UID' WHERE md5 = ?`, [UID]))) {
+                    UID = ""
+                    for (let i = 0; i < 8; i++) {
+                        UID += pattern[Math.floor(Math.random() * pattern.length)];
+                    }
+                }
 
+                return UID
+            }
             console.log('Connected to db as id ' + connection.threadId);
             resolve(connection);
         });

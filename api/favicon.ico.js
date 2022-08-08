@@ -1,5 +1,5 @@
-module.exports = (app, router, path) => {
-    router.get(path, (req, res) => {
+module.exports = (app, router, routeName) => {
+    router.get(routeName, (req, res) => {
         res.redirect(301, 'https://go.' + req.domain  + '/favicon.ico');
     });
 }
