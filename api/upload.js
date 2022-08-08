@@ -69,9 +69,9 @@ module.exports = (app, router, routeName) => {
                 fullUrl: "https://go.tawan475.dev/" + uid + "/" + name + ext
             }
 
-            var sql = `INSERT INTO UID (UID, JSON, md5, owner) VALUES (?, ?, ?, ?);`;
+            var sql = `INSERT INTO UID (UID, JSON, type, md5, owner) VALUES (?, ?, ?, ?);`;
 
-            await app.db.runQuery(sql, [uid, JSON.stringify(newUpload), file.md5, req.trustedip]).catch(err => {
+            await app.db.runQuery(sql, [uid, JSON.stringify(newUpload), "file", file.md5, req.trustedip]).catch(err => {
                 return next(createError(err));
             }).then(() => {
                 let result = {
