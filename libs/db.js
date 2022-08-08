@@ -21,7 +21,7 @@ module.exports = (app) => {
             connection.generateUID = async () => {
                 let pattern = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz-_"
                 let UID = 'UID'
-                while ((await connection.query(`SELECT * FROM 'UID' WHERE md5 = ?`, [UID]))) {
+                while ((await connection.query(`SELECT * FROM UID WHERE md5 = ?;`, [UID]))) {
                     UID = ""
                     for (let i = 0; i < 8; i++) {
                         UID += pattern[Math.floor(Math.random() * pattern.length)];
@@ -29,6 +29,15 @@ module.exports = (app) => {
                 }
 
                 return UID
+            }
+
+            connection.runQuery = async (sqlQuery, values = []) => {
+                return new Promise(function (resolve, reject) {
+                    connection.query(sqlQuery, values, function (error, results, fields) {
+                        if (error) reject(error);
+                        else resolve(results);
+                    });
+                });
             }
             console.log('Connected to db as id ' + connection.threadId);
             resolve(connection);

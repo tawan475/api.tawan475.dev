@@ -30,9 +30,9 @@ module.exports = (app, router, routeName) => {
 
         var nameDate = name + '-' + Date.now();
 
-        var sql = `SELECT * FROM 'UID' WHERE md5 = ?`;
-        let exist = await app.db.query(sql, [file.md5]).catch(err => {
-            next(createError(err));
+        var sql = `SELECT * FROM UID WHERE md5 = ?;`;
+        let exist = await app.db.runQuery(sql, [file.md5]).catch(err => {
+            return next(createError(err));
         });
         if (exist) {
             let result = {
@@ -52,7 +52,7 @@ module.exports = (app, router, routeName) => {
         file.mv(path.join(app.dirname, '../upload/', nameDate + ext), async function (err) {
             if (err) return next(createError(err));
 
-            var uid = await app.generateUID();
+            var uid = await app.db.generateUID();
 
             var newUpload = {
                 type: 'file',
@@ -68,9 +68,9 @@ module.exports = (app, router, routeName) => {
                 url: "https://go.tawan475.dev/" + uid + ext,
                 fullUrl: "https://go.tawan475.dev/" + uid + "/" + name + ext
             }
-            
-            var sql = `INSERT INTO 'UID' ('UID', 'JSON', 'md5', 'owner') VALUES ?`;
-            await app.db.query(sql, [uid, JSON.stringify(newUpload),  file.md5, req.trustedip]).catch(err => {
+
+            var sql = `INSERT INTO UID ('UID', 'JSON', 'md5', 'owner') VALUES ?;`;
+            await app.db.runQuery(sql, [uid, JSON.stringify(newUpload), file.md5, req.trustedip]).catch(err => {
                 next(createError(err));
             });
 
