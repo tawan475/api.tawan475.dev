@@ -33,8 +33,10 @@ module.exports = (app, router, routeName) => {
         var sql = `SELECT * FROM UID WHERE md5 = ?;`;
         let exist = await app.db.runQuery(sql, [file.md5]).catch(err => {
             return next(createError(err));
-        })[0];
-        if (exist) {
+        });
+
+        if (exist.length !== 0) {
+            exist = JSON.parse(JSON.parse(JSON.stringify(exist))[0].JSON);
             let result = {
                 status: "Found known entity in database.",
                 file: {
@@ -69,7 +71,7 @@ module.exports = (app, router, routeName) => {
                 fullUrl: "https://go.tawan475.dev/" + uid + "/" + name + ext
             }
 
-            var sql = `INSERT INTO UID (UID, JSON, type, md5, owner) VALUES (?, ?, ?, ?);`;
+            var sql = `INSERT INTO UID (UID, JSON, type, md5, owner) VALUES (?, ?, ?, ?, ?);`;
 
             await app.db.runQuery(sql, [uid, JSON.stringify(newUpload), "file", file.md5, req.trustedip]).catch(err => {
                 return next(createError(err));
