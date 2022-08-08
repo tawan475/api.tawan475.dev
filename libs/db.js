@@ -21,7 +21,7 @@ module.exports = (app) => {
             connection.generateUID = async () => {
                 let pattern = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz-_"
                 let UID = 'UID'
-                while ((await app.db.query(`SELECT * FROM 'UID' WHERE md5 = ?`, [UID]))) {
+                while ((await connection.query(`SELECT * FROM 'UID' WHERE md5 = ?`, [UID]))) {
                     UID = ""
                     for (let i = 0; i < 8; i++) {
                         UID += pattern[Math.floor(Math.random() * pattern.length)];

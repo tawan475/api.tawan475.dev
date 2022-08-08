@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 app.dirname = __dirname;
 (async() => {
-	await require('./libs/db')(app);
+	app.db = await require('./libs/db')(app);
 })();
 require('./libs/middlewares')(app);
 
