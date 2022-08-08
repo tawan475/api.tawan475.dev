@@ -33,7 +33,7 @@ module.exports = (app, router, routeName) => {
         var sql = `SELECT * FROM UID WHERE md5 = ?;`;
         let exist = await app.db.runQuery(sql, [file.md5]).catch(err => {
             return next(createError(err));
-        });
+        })[0];
         if (exist) {
             let result = {
                 status: "Found known entity in database.",
@@ -69,22 +69,23 @@ module.exports = (app, router, routeName) => {
                 fullUrl: "https://go.tawan475.dev/" + uid + "/" + name + ext
             }
 
-            var sql = `INSERT INTO UID ('UID', 'JSON', 'md5', 'owner') VALUES ?;`;
-            await app.db.runQuery(sql, [uid, JSON.stringify(newUpload), file.md5, req.trustedip]).catch(err => {
-                next(createError(err));
-            });
+            var sql = `INSERT INTO UID (UID, JSON, md5, owner) VALUES (?, ?, ?, ?);`;
 
-            let result = {
-                status: "Entity created: Uploaded new file.",
-                file: {
-                    url: "https://go.tawan475.dev/" + uid + ext,
-                    fullUrl: "https://go.tawan475.dev/" + uid + "/" + name + ext,
-                    uid: uid,
-                    filename: name + ext,
-                    size: file.size
-                }
-            };
-            return res.json(result);
+            await app.db.runQuery(sql, [uid, JSON.stringify(newUpload), file.md5, req.trustedip]).catch(err => {
+                return next(createError(err));
+            }).then(() => {
+                let result = {
+                    status: "Entity created: Uploaded new file.",
+                    file: {
+                        url: "https://go.tawan475.dev/" + uid + ext,
+                        fullUrl: "https://go.tawan475.dev/" + uid + "/" + name + ext,
+                        uid: uid,
+                        filename: name + ext,
+                        size: file.size
+                    }
+                };
+                return res.json(result);
+            })
         });
     });
 }
