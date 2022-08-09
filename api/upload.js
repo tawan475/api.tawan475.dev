@@ -20,9 +20,13 @@ module.exports = (app, router, routeName) => {
     });
 
     router.post(routeName, async (req, res, next) => {
-        if (!req.files) return res.status(400).json({
-            status: "No files included."
-        });
+        if (!req.files) {
+            let err = new Error('No files included.');
+            err.status = 400;
+            err.message = 'No files included.';
+            return next(err);
+        }
+		
         var file = req.files.file;
 
         var ext = file.name.includes('.') ? file.name.substring(file.name.lastIndexOf('.')) : (mime.extension(file.mimetype) ? '.' + mime.extension(file.mimetype) : '');
@@ -38,7 +42,8 @@ module.exports = (app, router, routeName) => {
         if (exist.length !== 0) {
             exist = JSON.parse(JSON.parse(JSON.stringify(exist))[0].JSON);
             let result = {
-                status: "Found known entity in database.",
+                status: 200,
+                message: "Found known entity in database.",
                 file: {
                     url: "https://go.tawan475.dev/" + exist.uid + exist.ext,
                     fullUrl: "https://go.tawan475.dev/" + exist.uid + "/" + exist.name + exist.ext,
@@ -77,7 +82,8 @@ module.exports = (app, router, routeName) => {
                 return next(createError(err));
             }).then(() => {
                 let result = {
-                    status: "Entity created: Uploaded new file.",
+                    status: 200,
+                    message: "Entity created: Uploaded new file.",
                     file: {
                         url: "https://go.tawan475.dev/" + uid + ext,
                         fullUrl: "https://go.tawan475.dev/" + uid + "/" + name + ext,

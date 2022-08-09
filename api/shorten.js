@@ -25,7 +25,8 @@ module.exports = (app, router, routeName) => {
         if (exist.length !== 0) {
             exist = JSON.parse(JSON.parse(JSON.stringify(exist))[0].JSON);
             let result = {
-                status: "Found known entity in database.",
+                status: 200,
+                message: "Found known entity in database.",
                 shorten: {
                     url: "https://go.tawan475.dev/" + exist.uid,
                     originalUrl: exist.url,
@@ -67,7 +68,8 @@ module.exports = (app, router, routeName) => {
             return next(createError(err));
         }).then(() => {
             let result = {
-                status: "Entity created: Link shorten",
+                status: 200,
+                message: "Entity created: Link shorten",
                 shorten: {
                     url: "https://go.tawan475.dev/" + uid,
                     originalUrl: url,
