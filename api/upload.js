@@ -28,7 +28,7 @@ module.exports = (app, router, routeName) => {
         var ext = file.name.includes('.') ? file.name.substring(file.name.lastIndexOf('.')) : (mime.extension(file.mimetype) ? '.' + mime.extension(file.mimetype) : '');
         var name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name) /*.replace(new RegExp(`${ext}\.?${ext}$`), `.${ext}`)*/ ;
 
-        var nameDate = name + '-' + Date.now();
+        var nameDate = `${name}-${Date.now()}.${file.md5}`;
 
         var sql = `SELECT * FROM UID WHERE md5 = ?;`;
         let exist = await app.db.runQuery(sql, [file.md5]).catch(err => {
