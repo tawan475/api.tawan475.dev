@@ -31,4 +31,5 @@ module.exports = (app) => {
     app.use(logger)
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
+    app.use(compression());
 }
