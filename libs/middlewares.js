@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const cloudflareIpProcessor = require('../libs/cloudflareIpProcessor');
 const logger = require('../libs/logger');
 
