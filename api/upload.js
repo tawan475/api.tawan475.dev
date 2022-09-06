@@ -29,11 +29,6 @@ module.exports = (app, router, routeName) => {
 		
         var file = req.files.file;
 
-        var ext = file.name.includes('.') ? file.name.substring(file.name.lastIndexOf('.')) : (mime.extension(file.mimetype) ? '.' + mime.extension(file.mimetype) : '');
-        var name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name) /*.replace(new RegExp(`${ext}\.?${ext}$`), `.${ext}`)*/ ;
-
-        var nameDate = `${name}-${Date.now()}.${file.md5}`;
-
         var sql = `SELECT * FROM UID WHERE md5 = ?;`;
         let exist = await app.db.runQuery(sql, [file.md5]).catch(err => {
             return next(createError(err));
@@ -56,10 +51,14 @@ module.exports = (app, router, routeName) => {
             return res.json(result);
         }
 
+        var ext = file.name.includes('.') ? file.name.substring(file.name.lastIndexOf('.')) : (mime.extension(file.mimetype) ? '.' + mime.extension(file.mimetype) : '');
+        var name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name) /*.replace(new RegExp(`${ext}\.?${ext}$`), `.${ext}`)*/ ;
+
+        var uid = await app.db.generateUID();
+        var nameDate = `${name}-${Date.now()}.${file.md5}.${uid}`;
+
         file.mv(path.join(app.dirname, '../upload/', nameDate + ext), async function (err) {
             if (err) return next(createError(err));
-
-            var uid = await app.db.generateUID();
 
             var newUpload = {
                 type: 'file',
