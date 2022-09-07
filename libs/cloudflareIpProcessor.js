@@ -3,7 +3,10 @@ const cloudflareIP = require('@tawan475/cloudflareip');
 const cfIP = new cloudflareIP();
 
 module.exports = (req, res, next) => {
-    if (req.headers['cf-connecting-ip'] && cfIP.isCloudflareIP({ headers: { "x-incoming-ip": req.headers['cloudflare-ip']}})) {
+    let forwardedFor = req.headers['x-forwarded-for'].split(',');
+    req.headers['cloudflare-ip'] = forwardedFor[1].trim();
+
+    if (req.headers['cf-connecting-ip'] && cfIP.isCloudflareIP( req.headers['cloudflare-ip'] )) {
         let realIP = ipaddr.process(req.headers['cf-connecting-ip']);
         let cloudflareip = ipaddr.process(req.headers['cloudflare-ip']);
 
@@ -18,7 +21,7 @@ module.exports = (req, res, next) => {
 
         req.cloudflare = true;
     } else {
-        let ip = ipaddr.process(req.socket.remoteAddress);
+        let ip = ipaddr.process(forwardedFor[0].trim());
         req.trustedip = ip.toString();
         req.trustedipver = ip.kind();
     }
